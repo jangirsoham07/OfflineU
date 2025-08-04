@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ lesson.title }} - {{ course.name }}</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        video, audio { 
+            width: 100%; 
+            max-width: 800px; 
+            border-radius: 5px;
+            display: block;
+            margin: 0 auto;
+        }
+        .content { 
+            margin: 20px 0; 
+        }
+        .navigation { 
+            margin: 20px 0; 
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            cursor: pointer; 
+            background: #007acc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        .file-link { 
+            display: block; 
+            margin: 5px 0; 
+            padding: 10px; 
+            background: #3d3d3d; 
+            text-decoration: none; 
+            color: #e0e0e0; 
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .file-link:hover { 
+            background: #404040; 
+        }
+        .lesson-path {
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            color: #999;
+        }
+        .lesson-title {
+            color: #007acc;
+            margin-bottom: 20px;
+        }
+        .text-content {
+            background: #3d3d3d;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            max-height: 600px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+        .text-content iframe {
+            background: white;
+            border-radius: 5px;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .nav-buttons a {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="lesson-title">{{ lesson.title }}</h1>
+        
+        <div class="lesson-path">
+            <strong>Path:</strong> {{ lesson_path }}
+        </div>
+        
+        <div class="navigation">
+            <a href="/" style="text-decoration: none; color: #007acc;">← Back to Course</a>
+            <button onclick="markCompleted()">Mark as Completed</button>
+        </div>
+
+        <div class="content">
+            {% if lesson.video_file %}
+            <h3>Video</h3>
+            <video controls preload="metadata" id="video-player">
+                <source src="/files/{{ lesson.video_file }}" type="video/mp4">
+                {% if lesson.subtitle_file %}
+                <track kind="subtitles" src="/files/{{ lesson.subtitle_file }}" srclang="en" label="English">
+                {% endif %}
+                Your browser does not support the video tag.
+            </video>
+            {% endif %}
+
+            {% if lesson.audio_file %}
+            <h3>Audio</h3>
+            <audio controls preload="metadata" id="audio-player">
+                <source src="/files/{{ lesson.audio_file }}" type="audio/mp3">
+                Your browser does not support the audio tag.
+            </audio>
+            {% endif %}
+
+            {% if lesson.text_files %}
+            <h3>Content</h3>
+            {% for text_file in lesson.text_files %}
+            <div style="margin-bottom: 20px;">
+                <h4>{{ text_file.split('/')[-1] }}</h4>
+                <div class="text-content" id="content-{{ loop.index0 }}">
+                    <div style="text-align: center; color: #666;">Loading content...</div>
+                </div>
+                <a href="/files/{{ text_file|replace('\\', '/') }}" class="file-link" target="_blank">
+                    📄 Open {{ text_file.split('/')[-1] }} in new tab
+                </a>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="nav-buttons">
+            {% if prev_lesson %}
+            <a href="/lesson/{{ prev_lesson }}">
+                <button>← Previous</button>
+            </a>
+            {% else %}
+            <button disabled>← Previous</button>
+            {% endif %}
+
+            {% if next_lesson %}
+            <a href="/lesson/{{ next_lesson }}">
+                <button>Next →</button>
+            </a>
+            {% else %}
+            <button disabled>Next →</button>
+            {% endif %}
+        </div>
+
+        <script>
+            // Load text content
+            {% for text_file in lesson.text_files %}
+            console.log('Loading file: {{ text_file }}');
+            const filePath = '{{ text_file|replace("\\", "/") }}';
+            console.log('Encoded file path:', filePath);
+            
+            // Check if this is an HTML file
+            const isHtmlFile = filePath.toLowerCase().endsWith('.html');
+            const contentDiv = document.getElementById('content-{{ loop.index0 }}');
+            
+            if (isHtmlFile) {
+                // For HTML files, create an iframe
+                console.log('Creating iframe for HTML file');
+                contentDiv.innerHTML = `
+                    <iframe 
+                        src="/files/${encodeURIComponent(filePath)}" 
+                        style="width: 100%; height: 600px; border: none; border-radius: 5px;"
+                        title="${filePath.split('/').pop()}"
+                    ></iframe>
+                `;
+            } else {
+                // For text files, fetch and display content
+                fetch('/files/' + encodeURIComponent(filePath))
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        return response.text();
+                    })
+                    .then(content => {
+                        console.log('Content loaded successfully, length:', content.length);
+                        if (contentDiv) {
+                            // Check if it's HTML content
+                            if (content.trim().startsWith('<') && content.includes('</')) {
+                                contentDiv.innerHTML = content;
+                            } else {
+                                // Treat as plain text
+                                contentDiv.textContent = content;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading content:', error);
+                        if (contentDiv) {
+                            contentDiv.innerHTML = 
+                                '<div style="color: #ff6b6b;">Error loading content: ' + error.message + '</div>' +
+                                '<div style="color: #999; font-size: 0.9em; margin-top: 10px;">File path: ' + filePath + '</div>';
+                        }
+                    });
+            }
+            {% endfor %}
+
+            // Media progress tracking
+            const video = document.getElementById('video-player');
+            const audio = document.getElementById('audio-player');
+            const activeMedia = video || audio;
+            let isCompleted = false;
+
+            if (activeMedia) {
+                let lastSaveTime = 0;
+
+                activeMedia.addEventListener('timeupdate', function() {
+                    const currentTime = activeMedia.currentTime;
+
+                    // Save progress every 15 seconds
+                    if (currentTime - lastSaveTime > 15) {
+                        saveProgress(currentTime);
+                        lastSaveTime = currentTime;
+                    }
+                });
+
+                activeMedia.addEventListener('ended', function() {
+                    saveProgress(activeMedia.currentTime, true);
+                    markAsCompleted();
+                });
+
+                // Resume from saved position
+                const savedProgress = {{ lesson.progress_seconds|default(0) }};
+                if (savedProgress > 0 && savedProgress < activeMedia.duration - 30) {
+                    activeMedia.currentTime = savedProgress;
+                    showNotification(`Resumed from ${Math.floor(savedProgress / 60)}:${String(Math.floor(savedProgress % 60)).padStart(2, '0')}`);
+                }
+            }
+
+            function saveProgress(progressSeconds, completed = false) {
+                fetch('/api/progress', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        lesson_path: '{{ lesson_path }}',
+                        completed: completed,
+                        progress_seconds: Math.floor(progressSeconds)
+                    })
+                }).catch(err => console.error('Failed to save progress:', err));
+            }
+
+            function markCompleted() {
+                if (isCompleted) return;
+
+                const currentTime = activeMedia ? activeMedia.currentTime : 0;
+                saveProgress(currentTime, true);
+                markAsCompleted();
+            }
+
+            function markAsCompleted() {
+                const btn = document.querySelector('button[onclick="markCompleted()"]');
+                if (btn) {
+                    btn.textContent = 'Completed ✓';
+                    btn.style.background = '#28a745';
+                    btn.disabled = true;
+                }
+                isCompleted = true;
+                showNotification('Lesson marked as completed!', 'success');
+            }
+
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${type === 'success' ? '#28a745' : '#007acc'};
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 5px;
+                    z-index: 10000;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+                    opacity: 0;
+                    transform: translateY(-20px);
+                    transition: all 0.3s ease;
+                `;
+                notification.textContent = message;
+
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                }, 100);
+
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateY(-20px)';
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (activeMedia && !e.ctrlKey && !e.altKey && !e.metaKey) {
+                    switch(e.key) {
+                        case ' ':
+                            e.preventDefault();
+                            if (activeMedia.paused) {
+                                activeMedia.play();
+                            } else {
+                                activeMedia.pause();
+                            }
+                            break;
+                        case 'ArrowLeft':
+                            e.preventDefault();
+                            activeMedia.currentTime = Math.max(0, activeMedia.currentTime - 10);
+                            break;
+                        case 'ArrowRight':
+                            e.preventDefault();
+                            activeMedia.currentTime = Math.min(activeMedia.duration, activeMedia.currentTime + 10);
+                            break;
+                        case 'ArrowUp':
+                            e.preventDefault();
+                            activeMedia.volume = Math.min(1, activeMedia.volume + 0.1);
+                            showNotification(`Volume: ${Math.round(activeMedia.volume * 100)}%`);
+                            break;
+                        case 'ArrowDown':
+                            e.preventDefault();
+                            activeMedia.volume = Math.max(0, activeMedia.volume - 0.1);
+                            showNotification(`Volume: ${Math.round(activeMedia.volume * 100)}%`);
+                            break;
+                    }
+                }
+            });
+
+            // Set completed state if already completed
+            if ({{ 'true' if lesson.completed else 'false' }}) {
+                markAsCompleted();
+            }
+        </script>
+    </div>
+</body>
+</html>

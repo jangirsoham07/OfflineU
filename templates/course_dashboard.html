@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if course %}{{ course.name }} - OfflineU{% else %}OfflineU{% endif %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: #2d2d2d;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #007acc;
+        }
+
+        .header h1 {
+            color: #007acc;
+            text-align: center;
+            font-size: 2.5em;
+        }
+
+        .nav {
+            background: #333;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+
+        .nav .container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .nav a:hover {
+            background: #007acc;
+        }
+
+        .card {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007acc;
+        }
+
+        .btn {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: #005a9e;
+        }
+
+        .btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #555;
+        }
+
+        .progress-bar {
+            background: #444;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 20px;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #007acc, #00a0ff);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        /* Dynamic Directory Tree Styles */
+        .tree-container {
+            margin-top: 20px;
+        }
+
+        .tree-item {
+            margin-bottom: 5px;
+        }
+
+        .tree-header {
+            background: #3d3d3d;
+            padding: 12px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.3s;
+            border-left: 3px solid #666;
+        }
+
+        .tree-header:hover {
+            background: #404040;
+        }
+
+        .tree-header.directory {
+            border-left-color: #007acc;
+        }
+
+        .tree-header.lesson {
+            border-left-color: #28a745;
+        }
+
+        .tree-header.completed {
+            border-left-color: #28a745;
+            background: #1e3d1e;
+        }
+
+        .tree-header.completed:hover {
+            background: #2d5a2d;
+        }
+
+        .tree-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .tree-icon {
+            font-size: 1.2em;
+            width: 20px;
+            text-align: center;
+        }
+
+        .tree-name {
+            font-weight: 500;
+        }
+
+        .tree-stats {
+            font-size: 0.85em;
+            color: #999;
+            margin-left: 10px;
+        }
+
+        .tree-toggle {
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+
+        .tree-toggle:hover {
+            background: #555;
+        }
+
+        .tree-content {
+            margin-left: 25px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .tree-content.expanded {
+            display: block;
+        }
+
+        .lesson-item {
+            background: #3d3d3d;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            border-left: 3px solid #666;
+        }
+
+        .lesson-item:hover {
+            border-left-color: #007acc;
+            background: #404040;
+            transform: translateX(5px);
+        }
+
+        .lesson-item.completed {
+            border-left-color: #28a745;
+            background: #1e3d1e;
+        }
+
+        .lesson-item.completed:hover {
+            background: #2d5a2d;
+        }
+
+        .lesson-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .lesson-icon {
+            font-size: 1.1em;
+        }
+
+        .lesson-meta {
+            font-size: 0.85em;
+            color: #999;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .lesson-type {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .lesson-type.video { background: #e74c3c; color: white; }
+        .lesson-type.audio { background: #9b59b6; color: white; }
+        .lesson-type.text { background: #34495e; color: white; }
+        .lesson-type.quiz { background: #f39c12; color: white; }
+        .lesson-type.mixed { background: #16a085; color: white; }
+
+        .status-icon {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .status-icon.completed {
+            color: #28a745;
+        }
+
+        .status-icon.pending {
+            color: #666;
+        }
+
+        .course-selector {
+            border: 2px dashed #666;
+            padding: 40px;
+            text-align: center;
+            margin: 40px 0;
+            border-radius: 10px;
+            background: #2d2d2d;
+        }
+
+        .course-selector input {
+            background: #3d3d3d;
+            border: 1px solid #666;
+            color: #e0e0e0;
+            padding: 12px;
+            font-size: 14px;
+            border-radius: 5px;
+            width: 80%;
+            margin-right: 10px;
+        }
+
+        .course-selector input::placeholder {
+            color: #999;
+        }
+
+        .course-selector input:focus {
+            outline: none;
+            border-color: #007acc;
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .last-accessed {
+            background: #2d5a2d;
+            border-left-color: #28a745;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .nav .container {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .course-selector input {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .tree-content {
+                margin-left: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>OfflineU</h1>
+        </div>
+    </div>
+
+    {% if course %}
+        <div class="nav">
+            <div class="container">
+                <a href="/reset_course">← Select Different Course</a>
+                <a href="#stats">Progress</a>
+                <span style="color: #666; margin-left: auto;">
+                    {{ stats.total_lessons }} lessons
+                </span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="card">
+                <h2>{{ course.name }}</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <strong>{{ stats.completed_lessons }}/{{ stats.total_lessons }}</strong> lessons completed
+                    </div>
+                    <div style="color: #007acc; font-size: 1.2em;">
+                        {{ "%.1f"|format(stats.completion_percentage) }}%
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ stats.completion_percentage }}%;"></div>
+                </div>
+
+                {% if stats.last_accessed_path %}
+                <div class="last-accessed">
+                    <strong>Last Accessed:</strong> {{ stats.last_accessed_path }}
+                    <a href="/lesson/{{ stats.last_accessed_path }}" class="btn" style="margin-left: 10px;">
+                        Continue
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="tree-container">
+                {% macro render_tree_node(node, depth=0) %}
+                <div class="tree-item">
+                    <div class="tree-header directory" onclick="toggleTree(this)">
+                        <div class="tree-title">
+                            <span class="tree-icon">📁</span>
+                            <span class="tree-name">{{ node.name }}</span>
+                            <span class="tree-stats">
+                                {{ (node.children|length + node.lessons|length) }} items
+                            </span>
+                        </div>
+                        {% if node.children or node.lessons %}
+                        <button class="tree-toggle">▶</button>
+                        {% endif %}
+                    </div>
+                    
+                    {% if node.children or node.lessons %}
+                    <div class="tree-content">
+                        {% for child_name, child_node in node.children.items() %}
+                            {{ render_tree_node(child_node, depth + 1) }}
+                        {% endfor %}
+                        
+                        {% for lesson in node.lessons %}
+                        {% set lesson_relative_path = lesson.path|replace('\\', '/')|replace(course.path|replace('\\', '/'), '')|replace('//', '/')|replace('/', '', 1) %}
+                        <div class="lesson-item {% if lesson.completed %}completed{% endif %}"
+                             onclick="window.location.href='/lesson/{{ lesson_relative_path }}/{{ lesson.title|replace(' ', '_') }}'">
+                            <div class="lesson-title">
+                                <span class="lesson-icon">
+                                    {% if lesson.lesson_type == 'video' %}🎥
+                                    {% elif lesson.lesson_type == 'audio' %}🎵
+                                    {% elif lesson.lesson_type == 'quiz' %}📝
+                                    {% elif lesson.lesson_type == 'mixed' %}📦
+                                    {% else %}📄{% endif %}
+                                </span>
+                                {{ lesson.title }}
+                            </div>
+                            <div class="lesson-meta">
+                                <span class="lesson-type {{ lesson.lesson_type }}">{{ lesson.lesson_type|title }}</span>
+                                {% if lesson.completed %}
+                                <span class="status-icon completed">✓</span>
+                                {% else %}
+                                <span class="status-icon pending">○</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endmacro %}
+                
+                {{ render_tree_node(course.root_node) }}
+            </div>
+        </div>
+    {% else %}
+        <div class="container">
+            <div class="course-selector">
+                <h2>Select a Course</h2>
+                <p>Enter the full path to your course directory:</p>
+                <div style="margin: 20px 0;">
+                    <input type="text" id="course-path" placeholder="e.g., C:\Users\YourName\Documents\MyCourse">
+                    <button onclick="loadCourseFromPath()" class="btn">Load Course</button>
+                </div>
+                
+                <div id="course-status" style="margin-top: 10px;"></div>
+                
+                <p style="margin-top: 20px; font-size: 12px; color: #999;">
+                    <strong>Examples:</strong><br>
+                    • C:\Users\YourName\Documents\MyCourse<br>
+                    • D:\Courses\Python Tutorial<br>
+                    • C:\Downloads\Udemy Course
+                </p>
+            </div>
+
+            <div style="margin-top: 40px;">
+                <div class="card">
+                    <h3>How to Use OfflineU:</h3>
+                    <ul style="margin-top: 10px; list-style-type: none; padding-left: 20px;">
+                        <li><strong>Prepare your course files</strong> in a directory structure</li>
+                        <li><strong>Copy the full path</strong> to your course directory</li>
+                        <li><strong>Paste the path</strong> in the input field above</li>
+                        <li><strong>Click "Load Course"</strong> or press Enter</li>
+                        <li><strong>Start learning!</strong> Your progress will be saved automatically</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>Supported File Types:</h3>
+                    <ul style="margin-top: 10px; list-style-type: none; padding-left: 20px;">
+                        <li><strong>Videos:</strong> .mp4, .mkv, .avi, .mov, .webm</li>
+                        <li><strong>Audio:</strong> .mp3, .wav, .m4a, .aac</li>
+                        <li><strong>Documents:</strong> .txt, .md, .html, .pdf</li>
+                        <li><strong>Subtitles:</strong> .srt, .vtt</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <script>
+        function toggleTree(element) {
+            console.log('Toggle clicked:', element);
+            
+            // Find the content div that comes after this header
+            const content = element.nextElementSibling;
+            const toggle = element.querySelector('.tree-toggle');
+            
+            console.log('Content element:', content);
+            console.log('Toggle element:', toggle);
+            
+            if (content && content.classList.contains('tree-content')) {
+                const isExpanded = content.classList.contains('expanded');
+                content.classList.toggle('expanded');
+                
+                if (toggle) {
+                    toggle.textContent = content.classList.contains('expanded') ? '▼' : '▶';
+                }
+                
+                console.log('Toggled tree, expanded:', content.classList.contains('expanded'));
+            } else {
+                console.log('No content element found or not tree-content');
+            }
+        }
+
+        function loadCourseFromPath() {
+            const pathInput = document.getElementById('course-path');
+            const statusDiv = document.getElementById('course-status');
+            const coursePath = pathInput.value.trim();
+            
+            if (!coursePath) {
+                statusDiv.innerHTML = '<p style="color: #ff6b6b;">Please enter a course path.</p>';
+                return;
+            }
+            
+            // Show loading status
+            statusDiv.innerHTML = '<p style="color: #007acc;">Loading course...</p>';
+            
+            fetch('/load_course', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({course_path: coursePath})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    statusDiv.innerHTML = '<p style="color: #28a745;">Course loaded successfully! Redirecting...</p>';
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    statusDiv.innerHTML = `<p style="color: #ff6b6b;">Error: ${data.error}</p>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error loading course:', error);
+                statusDiv.innerHTML = '<p style="color: #ff6b6b;">Error loading course. Please check the path and try again.</p>';
+            });
+        }
+        
+        // Allow Enter key to submit
+        document.addEventListener('DOMContentLoaded', function() {
+            const pathInput = document.getElementById('course-path');
+            if (pathInput) {
+                pathInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        loadCourseFromPath();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

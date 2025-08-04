@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OfflineU - Select Course</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .directory { padding: 10px; border: 1px solid #ddd; margin: 5px 0; cursor: pointer; }
+        .directory:hover { background-color: #f0f0f0; }
+        .course-candidate { background-color: #e8f5e8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OfflineU - Course Selection</h1>
+        <div id="browser"></div>
+        <script>
+            // Basic directory browser implementation
+            function loadDirectories(path = '') {
+                fetch(`/browse?path=${encodeURIComponent(path)}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        const browser = document.getElementById('browser');
+                        browser.innerHTML = `
+                            <h3>Current: ${data.current_path}</h3>
+                            ${data.parent_path ? `<div class="directory" onclick="loadDirectories('${data.parent_path}')">📁 .. (Parent)</div>` : ''}
+                            ${data.directories.map(dir => `
+                                <div class="directory ${dir.is_course_candidate ? 'course-candidate' : ''}" 
+                                     onclick="${dir.is_course_candidate ? `loadCourse('${dir.path}')` : `loadDirectories('${dir.path}')`}">
+                                    📁 ${dir.name} ${dir.media_files > 0 ? `(${dir.media_files} media files)` : ''}
+                                </div>
+                            `).join('')}
+                        `;
+                    });
+            }
+
+            function loadCourse(path) {
+                fetch('/load_course', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({course_path: path})
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                });
+            }
+
+            loadDirectories();
+        </script>
+    </div>
+</body>
+</html>

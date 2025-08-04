@@ -30,7 +30,7 @@
 1. Clone the repo:
 
    ```bash
-   git clone https://github.com/your-username/OfflineU.git
+   git clone https://github.com/WhiskeyCoder/OfflineU.git
    cd OfflineU
    ```
 
@@ -113,7 +113,7 @@ MyCourse/
 
 Join the development, suggest features, or ask questions via:
 
-* GitHub Issues: [https://github.com/your-username/OfflineU/issues](https://github.com/WhiskeyCoder/OfflineU/issues)
+* GitHub Issues: [https://github.com/WhiskeyCoder/OfflineU/issues](https://github.com/WhiskeyCoder/OfflineU/issues)
 
 ---
 

@@ -1,6 +1,6 @@
-# OfflineU — Self-Hosted Local Course Loader & Progress Tracker
+# OfflineU: Self-Hosted Local Course Loader & Progress Tracker
 
-**OfflineU** is a sleek, self-hosted web app designed to load and view your offline video, audio, text, and quiz-based training courses. Whether it's Udemy downloads, pirated training archives, or personal content—OfflineU turns your course folder into a fully navigable dashboard with automatic progress tracking.
+**OfflineU** is a sleek, self-hosted web app designed to load and view your offline video, audio, text, and quiz-based training courses. Whether it's Udemy downloads, "open sourced" training archives, or personal content—OfflineU turns your course folder into a fully navigable dashboard with automatic progress tracking.
 
 ---
 

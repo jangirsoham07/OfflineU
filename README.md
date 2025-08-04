@@ -12,7 +12,7 @@
 * ✅ **Lesson progress tracking**: Auto-saves your time spent and marks lessons as completed.
 * ♻️ **Continue where you left off**: Resume instantly from your last-accessed lesson.
 * 💾 **Local-first & private**: 100% offline. No cloud, no tracking, no nonsense.
-* 🧑‍💻 **Works with any course format**: No metadata required—just structured folders.
+* 🧑‍💻 **Works with any course format**: No metadata required, just structured folders.
 * 🧠 **Ideal for hoarders, students, or offline learning setups**
 
 ---

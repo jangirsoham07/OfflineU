@@ -114,7 +114,6 @@ MyCourse/
 Join the development, suggest features, or ask questions via:
 
 * GitHub Issues: [https://github.com/your-username/OfflineU/issues](https://github.com/WhiskeyCoder/OfflineU/issues)
-* \[Optional] Discussions: [https://github.com/your-username/OfflineU/discussions](https://github.com/WhiskeyCoder/OfflineU/discussions)
 
 ---
 

@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  offlineu:
+    image: ghcr.io/skippysteve/offlineu:main
+    container_name: offlineu-app
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+    volumes:
+      # Mount a local directory for course data persistence
+      - ./courses:/app/courses
+      # Mount a local directory for user data/progress
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s 

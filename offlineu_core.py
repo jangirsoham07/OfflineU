@@ -852,7 +852,7 @@ def create_templates():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='OfflineU Course Viewer & Tracker')
-    parser.add_argument('--host', default='127.0.0.1', help='Host to bind to')
+    parser.add_argument('--host', default='0.0.0.0', help='Host to bind to')
     parser.add_argument('--port', type=int, default=5000, help='Port to bind to')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode')
     parser.add_argument('--create-templates', action='store_true', help='Create basic templates')

